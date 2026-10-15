@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const isText = /\.(pptx|docx|txt|md)$/.test(lower);
 
   // ---- API base ----
-  const API_BASE = "http://127.0.0.1:8001/api";
+  const API_BASE = "https://veridoc-api-xnmf.onrender.com/api";
 
   // ==================================================
   // HIGHLIGHT: PDF (position-based)

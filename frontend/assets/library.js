@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =====================================================
   async function loadDocuments() {
     try {
-      const res = await fetch("http://127.0.0.1:8001/api/documents");
+      const res = await fetch("https://veridoc-api-xnmf.onrender.com/api/documents");
       const data = await res.json();
       const docs = data.documents || [];
 
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           try {
             const res = await fetch(
-              `http://127.0.0.1:8001/api/documents/${encodeURIComponent(storedName)}`,
+              `https://veridoc-api-xnmf.onrender.com/api/documents/${encodeURIComponent(storedName)}`,
               { method: "DELETE" }
             );
             if (!res.ok) {

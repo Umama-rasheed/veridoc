@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      const res = await fetch("http://127.0.0.1:8001/api/history", {
+      const res = await fetch("https://veridoc-api-xnmf.onrender.com/api/history", {
         headers: {
           "Authorization": `Bearer ${session.access_token}`,
         },
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function renderRows(rows) {
     // Load documents count for stat
     try {
-      const docsRes = await fetch("http://127.0.0.1:8001/api/documents");
+      const docsRes = await fetch("https://veridoc-api-xnmf.onrender.com/api/documents");
       const docsData = await docsRes.json();
       if (statDocsUsed) statDocsUsed.textContent = String((docsData.documents || []).length);
     } catch (e) {
