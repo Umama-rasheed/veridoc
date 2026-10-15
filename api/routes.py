@@ -5,8 +5,14 @@ load_dotenv()  # belt-and-suspenders: ensures env loaded even if imported direct
 
 import hashlib
 import shutil
+import platform
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from pydantic import BaseModel
+
+# Poppler path — Windows only. On Linux (Render), use system poppler.
+POPPLER_PATH = None
+if platform.system() == "Windows":
+    POPPLER_PATH = r"C:\Users\luqma\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\poppler\Library\bin"
 
 from backend.extractors import extract
 from backend.ingest import ingest_document
@@ -163,7 +169,7 @@ def pdf_page(req: PdfPageRequest):
             first_page=req.page,
             last_page=req.page,
             dpi=150,
-            poppler_path=r"C:\Users\luqma\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\poppler\Library\bin",
+            poppler_path=POPPLER_PATH,
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Render failed: {e}")
@@ -358,7 +364,7 @@ async def delete_document(stored_name: str):
 
 
 # =====================================================
-# NEW: Raw file endpoint (for images)
+# Raw file endpoint (for images)
 # =====================================================
 from fastapi.responses import FileResponse
 import glob as glob_module
@@ -387,7 +393,7 @@ async def raw_file(filename: str):
 
 
 # =====================================================
-# NEW: Text preview endpoint (for pptx/docx/txt/md)
+# Text preview endpoint (for pptx/docx/txt/md)
 # =====================================================
 @router.get("/text-preview/{filename}")
 async def text_preview(filename: str):
@@ -414,22 +420,18 @@ async def text_preview(filename: str):
         if not raw_text.strip():
             continue
 
-        # Per-line cleanup:
-        # - collapse multiple spaces/tabs into one
-        # - preserve \n (line breaks)
         lines = []
         blank_count = 0
         for line in raw_text.split("\n"):
-            line = " ".join(line.split())  # collapse whitespace within line
+            line = " ".join(line.split())
             if line == "":
                 blank_count += 1
-                if blank_count <= 1:  # at most one blank line
+                if blank_count <= 1:
                     lines.append("")
             else:
                 blank_count = 0
                 lines.append(line)
 
-        # Trim leading/trailing blanks
         while lines and lines[0] == "":
             lines.pop(0)
         while lines and lines[-1] == "":
