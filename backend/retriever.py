@@ -1,18 +1,21 @@
-"""Retrieve relevant chunks for a query."""
+"""Retrieve relevant chunks for a query — using Gemini Embeddings."""
 import os
 import chromadb
-from sentence_transformers import SentenceTransformer
+from google import genai
 
 CHROMA_DIR = os.getenv("CHROMA_DIR", "./chroma_db")
+EMBED_MODEL = "text-embedding-004"
 
-_embed_model = None
+_client = None
 
-
-def _get_embed_model():
-    global _embed_model
-    if _embed_model is None:
-        _embed_model = SentenceTransformer("all-MiniLM-L6-v2")
-    return _embed_model
+def _get_client():
+    global _client
+    if _client is None:
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise RuntimeError("GEMINI_API_KEY is not set")
+        _client = genai.Client(api_key=api_key)
+    return _client
 
 
 def _chroma():
@@ -23,14 +26,24 @@ def _chroma():
     )
 
 
+def get_query_embedding(question: str) -> list[float]:
+    """Generate embedding for a search query using Gemini."""
+    client = _get_client()
+    result = client.models.embed_content(
+        model=EMBED_MODEL,
+        contents=[question],
+        config={"task_type": "RETRIEVAL_QUERY"},
+    )
+    return result.embeddings[0].values
+
+
 def retrieve(question: str, top_k: int = 6):
     col = _chroma()
 
     if col.count() == 0:
         return []
 
-    model = _get_embed_model()
-    q_embed = model.encode([question], normalize_embeddings=True)[0].tolist()
+    q_embed = get_query_embedding(question)
 
     results = col.query(
         query_embeddings=[q_embed],
