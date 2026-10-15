@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      ::-webkit-scrollbar { display: none; }
+    }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-highest": "#31353c",
+            "surface-container-low": "#181c22",
+            "surface-container": "#1c2026",
+            "on-surface": "#dfe2eb",
+            "on-surface-variant": "#bbc9cd",
+            "outline-variant": "#3c494c",
+            "outline": "#859397",
+            "surface-container-lowest": "#0a0e14",
+            "primary": "#8aebff",
+            "primary-container": "#22d3ee",
+            "on-primary-fixed": "#001f25",
+            "secondary": "#4ae176",
+            "tertiary": "#ffd961",
+            "error": "#ffb4ab",
+          },
+          fontFamily: {
+            "body-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Playfair Display"],
+            "headline-sm": ["Playfair Display"],
+            "headline-md": ["Playfair Display"],
+            "label-md": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+          },
+          spacing: {
+            "space-lg": "1.5rem",
+            "gutter": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "space-md": "1rem",
+            "space-xl": "2.5rem",
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem",
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/auth.js"></script>
+</head>
+<body class="bg-surface-container-lowest font-body-md text-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-fixed">
+
+  <!-- HEADER -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant/40">
+    <div class="h-16 w-full px-gutter flex items-center justify-between">
+      <div class="flex items-center gap-space-sm">
+        <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Veridoc</span>
+        <span class="font-label-sm text-label-sm text-outline px-space-xs py-0.5 rounded border border-outline-variant/30">Viewer</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-space-md">
+        <a href="index.html" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-sm px-space-xs">Home</a>
+        <a href="library.html" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-sm px-space-xs">Library</a>
+        <a href="ask.html" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-sm px-space-xs">Ask</a>
+        <a href="viewer.html" class="font-label-md text-label-md text-primary border-b-2 border-primary-container py-space-sm px-space-xs">Viewer</a>
+        <a href="history.html" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-sm px-space-xs">History</a>
+        <a href="account.html" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-sm px-space-xs">Account</a>
+      </nav>
+      <div class="flex items-center gap-space-md">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low border border-outline-variant/50">
+          <span class="w-1.5 h-1.5 rounded-full bg-secondary shadow-[0_0_8px_currentColor]"></span>
+          <span class="font-label-sm text-label-sm text-on-surface tracking-wider uppercase">Strict Verification</span>
+        </div>
+        <div id="userChip" class="flex items-center gap-2"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="w-full pt-16 bg-surface-container-lowest min-h-screen">
+    <div class="flex flex-col w-full px-gutter py-space-lg">
+
+      <!-- Top Ribbon -->
+      <div class="w-full flex flex-col md:flex-row md:items-center justify-between gap-space-md py-space-md mb-space-md bg-surface-container-low rounded-xl px-space-lg shadow-sm">
+        <div class="flex flex-wrap items-center gap-space-md">
+          <a href="ask.html" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md transition-all group">
+            <span class="material-symbols-outlined text-[16px] text-primary transition-transform group-hover:-translate-x-0.5">arrow_back</span>
+            <span>Back to Answer</span>
+          </a>
+          <div class="h-4 w-px bg-surface-container-highest hidden sm:block"></div>
+          <nav class="flex items-center gap-2 font-label-md text-label-md text-on-surface-variant">
+            <span>Library</span>
+            <span class="text-outline text-[10px]">/</span>
+            <span id="breadcrumbFile" class="text-on-surface flex items-center gap-1 font-medium">
+              <span class="material-symbols-outlined text-[15px] text-primary">description</span>
+              Loading...
+            </span>
+            <span class="text-outline text-[10px]">/</span>
+            <span id="breadcrumbPage" class="text-primary font-semibold">Page —</span>
+          </nav>
+        </div>
+        <div class="flex items-center gap-space-md">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-lowest shadow-inner">
+            <span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#4ae176]"></span>
+            <span class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">Verified Root Reference</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Split Layout -->
+      <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+
+        <!-- LEFT: Answer Snippet + Metadata -->
+        <div class="lg:col-span-5 flex flex-col gap-space-lg">
+          <div class="w-full bg-surface-container rounded-xl p-space-lg shadow-md relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-container via-primary to-transparent opacity-80"></div>
+            <div class="flex items-center justify-between mb-space-md">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[18px]">auto_awesome</span>
+                <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-bold">Source Reference</span>
+              </div>
+            </div>
+            <div class="bg-surface-container-lowest p-space-md rounded-lg mb-space-md">
+              <p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                This page contains the source passage that anchors the answer you requested.
+              </p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+              <div class="bg-surface-container p-space-sm rounded-lg">
+                <span class="block font-label-sm text-label-sm text-outline uppercase tracking-wider mb-1">Source File</span>
+                <span id="metaFilename" class="block font-body-sm text-body-sm text-on-surface truncate font-mono">—</span>
+              </div>
+              <div class="bg-surface-container p-space-sm rounded-lg">
+                <span class="block font-label-sm text-label-sm text-outline uppercase tracking-wider mb-1">Page</span>
+                <span id="metaPage" class="block font-body-sm text-body-sm text-primary font-mono font-bold">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Content Area (PDF / Image / Text) -->
+        <div class="lg:col-span-7 flex flex-col bg-surface-container-low rounded-xl shadow-xl overflow-hidden">
+          <div class="flex items-center justify-between px-space-lg py-3 bg-surface-container border-b border-surface-container-highest">
+            <div class="flex items-center gap-2 min-w-0">
+              <span id="viewerFileIcon" class="material-symbols-outlined text-primary text-[20px]">picture_as_pdf</span>
+              <span id="viewerFilename" class="font-label-md text-label-md text-on-surface font-semibold truncate">Loading...</span>
+              <span class="text-outline text-xs">•</span>
+              <span id="viewerPageLabel" class="font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap">Page —</span>
+            </div>
+            <a id="openFullDocBtn" href="#" class="hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-container/15 hover:bg-primary-container/25 text-primary font-label-sm text-label-sm transition-all shrink-0">
+              <span class="material-symbols-outlined text-[16px]">open_in_full</span>
+              <span>Open Full Document</span>
+            </a>
+          </div>
+
+          <div class="relative w-full p-4 md:p-8 bg-surface-container-lowest flex justify-center overflow-auto min-h-[740px]">
+
+            <!-- State 1: Loading -->
+            <div id="pdfLoading" class="flex flex-col items-center justify-center gap-3 text-on-surface-variant">
+              <span class="material-symbols-outlined text-[48px] text-primary animate-spin">progress_activity</span>
+              <span class="font-label-md">Loading preview...</span>
+            </div>
+
+            <!-- State 2: PDF wrapper -->
+            <div id="pdfWrapper" class="hidden relative">
+              <img id="pdfImage" class="max-w-full h-auto rounded-lg shadow-2xl block" alt="PDF page" />
+              <div id="highlightOverlay" class="absolute pointer-events-none" style="display:none;">
+                <div class="w-full h-full bg-sky-300/35 border-2 border-sky-400 rounded-sm shadow-[0_0_24px_rgba(56,189,248,0.5)] ring-1 ring-sky-300/60"></div>
+              </div>
+            </div>
+
+            <!-- State 3: Image wrapper (PNG/JPG) -->
+            <div id="imageWrapper" class="hidden w-full flex justify-center">
+              <img id="imagePreview" class="max-w-full h-auto rounded-lg shadow-2xl" alt="Uploaded image" />
+            </div>
+
+            <!-- State 4: Text preview wrapper (PPTX/DOCX/TXT/MD) -->
+            <div id="textWrapper" class="hidden w-full max-w-3xl">
+              <div id="textPreviewContainer" class="flex flex-col gap-4">
+                <!-- Rendered dynamically by viewer.js -->
+              </div>
+            </div>
+
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-space-lg py-3 bg-surface-container border-t border-surface-container-highest">
+            <div class="flex items-center gap-2">
+              <button id="prevPageBtn" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-all">
+                <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+                <span>Prev Page</span>
+              </button>
+              <div class="flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant px-2">
+                <span>Page</span>
+                <span id="currentPageDisplay" class="text-primary font-mono font-bold">—</span>
+              </div>
+              <button id="nextPageBtn" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-all">
+                <span>Next Page</span>
+                <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Anchored Source — Full-width banner at bottom -->
+      <div class="w-full mt-space-lg bg-surface-container-low/70 rounded-xl p-space-md flex items-center gap-space-md shadow-sm">
+        <div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-secondary text-[22px]">verified_user</span>
+        </div>
+        <div>
+          <span class="block font-label-md text-label-md font-semibold text-on-surface">Anchored Source</span>
+          <p class="font-body-sm text-body-sm text-outline mt-0.5">
+            Every claim traces back to its source. Zero ungrounded assertions.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/auth.js"></script>
+  <script src="assets/api.js"></script>
+  <script src="assets/viewer.js"></script>
+  <script>window.Auth.renderUserChip();</script>
+</body>
+</html>
