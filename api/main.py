@@ -10,7 +10,7 @@ from api.routes import router  # Imports routes AFTER env is loaded
 
 app = FastAPI(title="Veridoc API", version="0.1.0")
 
-# CORS — allow frontend on Vercel + local dev
+# CORS — allow Vercel frontend + local dev
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[

@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const session = await window.Auth.getSession();
         if (session && !window.Auth.isGuest()) {
-          await fetch(`https://veridoc-api-xnmf.onrender.com/api/history`, {
+          await fetch(`https://veridoc-3ysg.onrender.com/api/history`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

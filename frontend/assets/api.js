@@ -1,5 +1,5 @@
 // Veridoc API bridge
-const API_BASE = "https://veridoc-api-xnmf.onrender.com/api";
+const API_BASE = "https://veridoc-3ysg.onrender.com/api";
 
 async function uploadDocument(file) {
   const formData = new FormData();
